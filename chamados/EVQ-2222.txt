@@ -1,0 +1,10 @@
+Chamado: EVQ-2222
+Protocolo: 343209-7
+Prioridade: Média
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Notebook/Desktop
+Data de Abertura: 05/02/2025 11:44
+Visita Técnica: 2025-02-23
+Descricao: queimou!

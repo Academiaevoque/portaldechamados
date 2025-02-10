@@ -1,0 +1,12 @@
+Chamado: EVQ-4575
+Protocolo: 512222-4
+Prioridade: Média
+Nome do Solicitante: EMERSON DA SILVA SANTOS
+Cargo: Gerente Regional
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911558391
+Problema Reportado: Rede (Distribuição de Rede)
+Data de Abertura: 06/02/2025 09:22
+Visita Técnica: 2025-02-04
+Descricao: ddd
+Status: Aguardando

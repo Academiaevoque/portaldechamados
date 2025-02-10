@@ -1,0 +1,12 @@
+Chamado: EVQ-6712
+Protocolo: 165797-1
+Prioridade: Média
+Nome do Solicitante: tttt
+Cargo: Gerente
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911667522
+Problema Reportado: Carregadores
+Data de Abertura: 05/02/2025 16:33
+Visita Técnica: Não requisitada
+Descricao: iii
+Status: Aguardando

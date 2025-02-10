@@ -1,0 +1,8 @@
+Chamado: EVQ-7192
+Protocolo: 804890-8
+Prioridade: Média
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Internet
+Visita Técnica: 2025-02-11

@@ -1,0 +1,12 @@
+Chamado: EVQ-2319
+Protocolo: 849835-6
+Prioridade: Média
+Nome do Solicitante: sss
+Cargo: Gerente
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911667522
+Problema Reportado: Carregadores
+Descricao: ccc
+Visita Técnica: 2025-03-07
+Data de Abertura: 05/02/2025 16:10
+Status: Aguardando

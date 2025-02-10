@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitação de Compra</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
+    <style>
+        .prioridade {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .modal-content p {
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        .modal-content span {
+            font-weight: bold;
+            color: #485fc7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 600px; margin: 50px auto;">
+        <div class="box">
+            <h1 class="title is-4">Solicitação de Compra</h1>
+            <form id="solicitacaoForm" onsubmit="abrirModal(event)">
+                <div class="field">
+                    <label class="label">Cargo</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="cargo" required>
+                                <option value="Gerente">Gerente</option>
+                                <option value="Gerente Regional">Gerente Regional</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Nome do Solicitante</label>
+                    <div class="control">
+                        <input class="input" type="text" name="nome_solicitante" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Unidade</label>
+                    <div class="control">
+                        <input class="input" type="text" name="unidade" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Produto</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="categoria_produto" id="categoria_produto" required>
+                                <option value="">Selecione uma categoria</option>
+                                <option value="Notebook/Desktop">Notebook/Desktop</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="Antena">Antena</option>
+                                <option value="Perifericos">Periféricos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field" id="perifericos_field" style="display:none;">
+                    <label class="label">Selecione o Periférico</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="produto" id="produto_periferico">
+                                <option value="Mouse">Mouse</option>
+                                <option value="Teclado">Teclado</option>
+                                <option value="Suporte de Notebook">Suporte de Notebook</option>
+                                <option value="Webcam Logitech C920">Webcam Logitech C920</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Motivo</label>
+                    <div class="control">
+                        <textarea class="textarea" name="motivo" placeholder="Descreva o motivo da solicitação" required></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">E-mail</label>
+                    <div class="control">
+                        <input class="input" type="email" name="email" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Telefone</label>
+                    <div class="control">
+                        <input class="input" type="tel" name="telefone" pattern="\d{2}\d{9}" placeholder="Ex: 11987654321" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Enviar Solicitação</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <h2 class="title is-4">Solicitação Enviada com Sucesso!</h2>
+                <p>Sua solicitação foi registrada com o código: <span id="codigoSolicitacao"></span></p>
+                <p>Protocolo gerado: <span id="protocoloSolicitacao"></span></p>
+                <p class="is-size-7">Um email com estas informações foi enviado para o endereço cadastrado.</p>
+                <button class="button is-primary mt-4" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('categoria_produto').addEventListener('change', function() {
+            var perifericos_field = document.getElementById('perifericos_field');
+            perifericos_field.style.display = (this.value === 'Perifericos') ? 'block' : 'none';
+        });
+
+        function abrirModal(event) {
+            event.preventDefault();
+
+            const formData = new FormData(document.getElementById('solicitacaoForm'));
+
+            fetch('/solicitacao-compra', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    document.getElementById('codigoSolicitacao').innerText = data.codigo_solicitacao;
+                    document.getElementById('protocoloSolicitacao').innerText = data.protocolo;
+
+                    setTimeout(function() {
+                        document.getElementById('modal').classList.add('is-active');
+                    }, 3000);
+                } else {
+                    alert('Erro ao enviar solicitação. Tente novamente.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao enviar solicitação. Tente novamente.');
+            });
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('is-active');
+            document.getElementById('solicitacaoForm').reset();
+            window.location.href = "/";
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalBackground = document.querySelector('.modal-background');
+            if(modalBackground) {
+                modalBackground.addEventListener('click', fecharModal);
+            }
+        });
+    </script>
+</body>
+</html>

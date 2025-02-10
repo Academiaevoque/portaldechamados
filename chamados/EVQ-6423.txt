@@ -1,0 +1,10 @@
+Chamado: EVQ-6423
+Protocolo: 978871-3
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Teclado
+Data de Abertura: 05/02/2025 15:45
+Visita Técnica: Não requisitada
+Descricao: cc

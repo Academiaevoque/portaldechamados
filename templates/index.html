@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Portal de Chamados</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: #f4f7fc; /* Fundo suave para o corpo da página */
+    }
+    .menu {
+      background: linear-gradient(135deg, #2c3e50, #4e73df);
+      padding: 20px;
+      height: 100vh;
+      color: white;
+    }
+    .menu-list__profile {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .menu-list__profile .image img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid white;
+    }
+    .menu-list__profile .title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .menu-list a {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+      color: white;
+      font-weight: bold;
+      transition: background 0.3s;
+      border-radius: 8px;
+    }
+    .menu-list a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .menu-list a i {
+      margin-right: 10px;
+    }
+    .menu-list .active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    .dashboard__header {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #4e73df;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .dashboard__subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: normal;
+      margin-top: 10px;
+      margin-bottom: 40px;
+      color: #888;
+    }
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .card {
+      width: 200px;
+      padding: 15px;
+      border-radius: 8px;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+    .card.concluido {
+      background-color: #28a745;
+    }
+    .card.andamento {
+      background-color: #ffc107;
+    }
+    .card.aguardando {
+      background-color: #dc3545; /* Mantém a cor vermelha, mas muda o texto */
+    }
+    .dashboard {
+      background-color: white; /* Fundo branco para a área central */
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
+    }
+    /* Estilo do bloco dos últimos chamados */
+    .ultimo-chamado {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .ultimo-chamado h3 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #4e73df;
+      text-align: center;
+    }
+    .ultimo-chamado table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .ultimo-chamado table, .ultimo-chamado th, .ultimo-chamado td {
+      border: 1px solid #ddd;
+    }
+    .ultimo-chamado th, .ultimo-chamado td {
+      padding: 10px;
+      text-align: left;
+    }
+    .ultimo-chamado th {
+      background-color: #f4f7fc;
+      color: #4e73df;
+    }
+    .ultimo-chamado td {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <div class="columns is-gapless">
+      <div class="column is-3">
+        <aside class="menu">
+          <div class="menu-list__profile">
+            <figure class="image">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9m4yL0aiJvvkqisEp4WNovX6Lu_JkU-VUcg&s" alt="Logo da Evoque Academias">
+            </figure>
+            <p class="title is-5">EVOQUE ACADEMIAS</p>
+          </div>
+          <ul class="menu-list">
+            <li><a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="/abrir-chamado"><i class="fas fa-plus-circle"></i> Abrir Chamado</a></li>
+            <li><a href="/gerar-relatorio"><i class="fas fa-file-alt"></i> Gerar Relatório</a></li>
+            <li><a href="/ver-meus-chamados"><i class="fas fa-search"></i> Ver Meus Chamados</a></li>
+            <li><a href="/solicitacao-compra"><i class="fas fa-shopping-cart"></i> Solicitação de Compra</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
+          </ul>
+        </aside>
+      </div>
+      <div class="column is-9">
+        <div class="dashboard">
+          <p class="dashboard__header">DASHBOARD: PORTAL DE CHAMADOS</p>
+          <p class="dashboard__subtitle">Status dos Chamados</p>
+<div class="cards-container">
+    <div class="card concluido">Chamados Concluídos: {{ concluidos }}</div>
+    <div class="card andamento">Chamados em Andamento: {{ andamento }}</div>
+    <div class="card aguardando">Chamados Aguardando: {{ pendentes }}</div>
+</div>
+
+
+        <!-- Bloco de Últimos Chamados -->
+        <div class="ultimo-chamado">
+          <h3>Últimos Chamados</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>UNIDADE</th>
+                <th>PROTOCOLO</th>
+                <th>CHAMADO</th>
+                <th>DATA</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if chamados_recentes %}
+                {% for chamado in chamados_recentes %}
+                  <tr>
+                    <!-- Aqui, "UNIDADE" será representada pelo nome do solicitante -->
+                    <td>{{ chamado.nome_solicitante }}</td>
+                    <!-- Exibe "#" seguido do número do protocolo -->
+                    <td>#{{ chamado.protocolo }}</td>
+                    <!-- Exibe o código do chamado ocultando os dois últimos dígitos, exemplo: EVQ-15## -->
+                    <td>{{ chamado.codigo_chamado[:6] }}##</td>
+                    <td>
+                      {% if chamado.data_abertura %}
+                        {{ chamado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
+                      {% else %}
+                        N/A
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="4">Nenhum chamado recente.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

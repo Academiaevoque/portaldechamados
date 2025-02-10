@@ -1,0 +1,12 @@
+Chamado: EVQ-1716
+Protocolo: 166573-2
+Prioridade: Urgente
+Nome do Solicitante: Emerson Santos
+Cargo: Gerente
+E-mail: eeiii@gmail.com
+Telefone: 11911667522
+Problema Reportado: Antenas (WI-FI)
+Descricao: vv
+Data de Abertura: 05/02/2025 16:49
+Visita Técnica: Não requisitada
+Status: Em andamento

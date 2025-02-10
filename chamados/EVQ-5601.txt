@@ -1,0 +1,9 @@
+Chamado: EVQ-5601
+Protocolo: 397602-4
+Prioridade: Média
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente Regional
+Problema Reportado: TVs
+Data de Abertura: 05/02/2025 10:31
+Visita Técnica: 2025-02-04

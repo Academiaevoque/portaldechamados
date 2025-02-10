@@ -1,0 +1,4 @@
+Código do Chamado: EVQ-8679
+Solicitante: sss
+Descrição: CCC
+Protocolo: 427206-1

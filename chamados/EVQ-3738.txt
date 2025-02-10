@@ -1,0 +1,12 @@
+Chamado: EVQ-3738
+Protocolo: 264842-3
+Prioridade: Média
+Nome do Solicitante: EMERSON DA SILVA SANTOS
+Cargo: Gerente Regional
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911558391
+Problema Reportado: Internet - Switch
+Data de Abertura: 09/02/2025 11:30
+Visita Técnica: Não requisitada
+Descricao: kkk
+Status: Aguardando

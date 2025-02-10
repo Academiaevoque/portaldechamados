@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerar Relatório - Portal de Chamados</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+    }
+    .card {
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .card-header {
+      background-color: #4e73df;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .card-header-title {
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
+    .card-content {
+      padding: 2rem;
+    }
+    .input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .button {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 6px;
+      background-color: #4e73df;
+      color: white;
+      font-weight: bold;
+      border: none;
+    }
+    .button:hover {
+      background-color: #2e59d9;
+    }
+    .message {
+      padding: 1.25rem;
+      border-radius: 6px;
+      background-color: #e7f7e7;
+      margin-top: 20px;
+    }
+    .columns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .column {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .content {
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+    .button.is-link {
+      background-color: #36a7e3;
+      border-radius: 6px;
+    }
+    .button.is-link:hover {
+      background-color: #2f85c7;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <div class="columns">
+      <!-- Conteúdo Principal -->
+      <div class="column">
+        <!-- Card de Gerar Relatório -->
+        <div class="card">
+          <div class="card-header">
+            <p class="card-header-title">Gerar Relatório</p>
+          </div>
+          <div class="card-content">
+            <form action="/gerar-relatorio" method="POST">
+              <div class="field">
+                <label class="label">Código do Chamado</label>
+                <div class="control">
+                  <input class="input" type="text" name="codigo_chamado" placeholder="Digite o código do chamado" required>
+                </div>
+              </div>
+              <div class="field">
+                <div class="control">
+                  <button class="button" type="submit">Gerar Relatório</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {% if codigo_chamado %}
+        <!-- Card de Sucesso na Geração do Relatório -->
+        <div class="card">
+          <div class="card-header">
+            <p class="card-header-title">Relatório Gerado</p>
+          </div>
+          <div class="card-content">
+            <div class="content">
+              <p>O relatório para o chamado com código <strong>{{ codigo_chamado }}</strong> foi gerado com sucesso!</p>
+              <a href="{{ url_for('static', filename='chamado_' + codigo_chamado + '.pdf') }}" class="button is-link" download>Baixar PDF</a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

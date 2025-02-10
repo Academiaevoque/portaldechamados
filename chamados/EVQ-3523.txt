@@ -1,0 +1,12 @@
+Chamado: EVQ-3523
+Protocolo: 715291-1
+Prioridade: Média
+Nome do Solicitante: EMERSON DA SILVA SANTOS
+Cargo: Gerente Regional
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911558391
+Problema Reportado: Internet
+Data de Abertura: 07/02/2025 14:46
+Visita Técnica: 2025-02-21
+Descricao: cccc
+Status: Aguardando

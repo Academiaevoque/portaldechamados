@@ -1,0 +1,10 @@
+Chamado: EVQ-4106
+Protocolo: 304199-6
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Catraca
+Data de Abertura: 05/02/2025 15:03
+Visita Técnica: 2025-02-18
+Descricao: ss

@@ -1,0 +1,4 @@
+Código do Chamado: EVQ-2093
+Solicitante: ddd
+Descrição: cc
+Protocolo: 836990-7

@@ -1,0 +1,10 @@
+Chamado: EVQ-2017
+Protocolo: 412006-6
+Prioridade: Urgente
+Status: Aguardando
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Catraca
+Data de Abertura: 05/02/2025 11:42
+Visita Técnica: 2025-02-10
+Descricao: cc

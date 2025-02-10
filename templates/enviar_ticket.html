@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Enviar Ticket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container-main {
+      display: flex;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      width: 80%;
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container-main">
+  <div class="card">
+    <header class="card-header">
+      <p class="card-header-title">Enviar Ticket</p>
+    </header>
+    <div class="card-content">
+      <form action="/enviar-ticket" method="POST">
+        <div class="field">
+          <label class="label">Código do Chamado</label>
+          <div class="control">
+            <input class="input" type="text" name="codigo_chamado" placeholder="Digite o código do chamado" required>
+          </div>
+        </div>
+        <div class="field">
+          <label class="label">Conteúdo do Ticket</label>
+          <div class="control">
+            <textarea class="textarea" name="conteudo_ticket" placeholder="Digite o conteúdo do ticket" required></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button is-primary" type="submit">Enviar Ticket</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

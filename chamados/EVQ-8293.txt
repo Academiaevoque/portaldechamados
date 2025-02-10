@@ -1,0 +1,10 @@
+Chamado: EVQ-8293
+Protocolo: 568447-1
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente Regional
+Problema Reportado: Catraca
+Data de Abertura: 05/02/2025 14:53
+Visita Técnica: 2025-02-27
+Descricao: ccc

@@ -1,0 +1,10 @@
+Chamado: EVQ-5197
+Protocolo: 358251-5
+Prioridade: Média
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente Regional
+Problema Reportado: Notebook/Desktop
+Data de Abertura: 05/02/2025 14:52
+Visita Técnica: 2025-02-26
+Descricao: c

@@ -1,0 +1,10 @@
+Chamado: EVQ-3892
+Protocolo: 361124-1
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente Regional
+Problema Reportado: Mouse
+Data de Abertura: 05/02/2025 14:33
+Visita Técnica: 2025-02-19
+Descricao: www

@@ -1,0 +1,12 @@
+Chamado: EVQ-9037
+Protocolo: 746870-4
+Prioridade: Urgente
+Nome do Solicitante: ddd
+Cargo: Gerente
+E-mail: softworktech1995ef@gmail.com
+Telefone: 11911667522
+Problema Reportado: Teclado
+Data de Abertura: 05/02/2025 17:17
+Visita Técnica: Não requisitada
+Descricao: dd
+Status: Aguardando

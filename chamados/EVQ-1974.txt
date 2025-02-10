@@ -1,0 +1,4 @@
+Código do Chamado: EVQ-1974
+Solicitante: sss
+Descrição: quebrou
+Protocolo: 192764-3

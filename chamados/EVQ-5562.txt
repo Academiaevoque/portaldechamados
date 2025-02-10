@@ -1,0 +1,10 @@
+Chamado: EVQ-5562
+Protocolo: 372353-2
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Webcam (Logitech C920)
+Data de Abertura: 05/02/2025 11:09
+Visita Técnica: 2025-02-03
+Descricao: ccc

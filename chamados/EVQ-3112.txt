@@ -1,0 +1,10 @@
+Chamado: EVQ-3112
+Protocolo: 491319-7
+Prioridade: Urgente
+Status: 
+Nome do Solicitante: sss
+Cargo: Gerente
+Problema Reportado: Teclado
+Data de Abertura: 05/02/2025 12:38
+Visita Técnica: 2025-02-25
+Descricao: cc

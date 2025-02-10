@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Abrir Chamado</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
+    <style>
+        .prioridade {
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-transform: uppercase;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .prioridade.urgente {
+            background-color: #ffb3b3;
+            color: #d80000;
+        }
+        .prioridade.alta {
+            background-color: #ffcc80;
+            color: #e57f00;
+        }
+        .prioridade.media {
+            background-color: #ffeb99;
+            color: #e6a900;
+        }
+        .prioridade.baixa {
+            background-color: #99e699;
+            color: #267d2f;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .modal-content p {
+            margin: 15px 0;
+            font-size: 1.1em;
+        }
+        .modal-content span {
+            font-weight: bold;
+            color: #485fc7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="max-width: 600px; margin: 50px auto;">
+        <div class="box">
+            <h1 class="title is-4">Abrir Chamado</h1>
+            <form id="chamadoForm" onsubmit="abrirModal(event)">
+                <div class="field">
+                    <label class="label">Nome do Solicitante</label>
+                    <div class="control">
+                        <input class="input" type="text" name="nome_solicitante" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Gerente ou Gerente Regional</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="cargo" required>
+                                <option value="Gerente">Gerente</option>
+                                <option value="Gerente Regional">Gerente Regional</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">E-mail</label>
+                    <div class="control">
+                        <input class="input" type="email" name="email" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Telefone</label>
+                    <div class="control">
+                        <input class="input" type="tel" name="telefone" pattern="\d{2}\d{9}" placeholder="Ex: 11987654321" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Problema Reportado</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="problema" id="problema" onchange="toggleDescricao()" required>
+                                <option value="">Selecione</option>
+                                <option value="Catraca">Catraca</option>
+                                <option value="Sistema EVO">Sistema EVO</option>
+                                <option value="Notebook/Desktop">Notebook/Desktop</option>
+                                <option value="TVs">TVs</option>
+                                <option value="Internet">Internet</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subcategoria para 'Internet' -->
+                <div class="field" id="internetSubcategoria" style="display: none;">
+                    <label class="label">Selecione o item de Internet</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="internet_item">
+                                <option value="">Selecione</option>
+                                <option value="Wi-fi">Wi-fi</option>
+                                <option value="Roteador/Modem">Roteador/Modem</option>
+                                <option value="Antenas">Antenas</option>
+                                <option value="Cabo de rede">Cabo de rede</option>
+                                <option value="Switch">Switch</option>
+                                <option value="DVR">DVR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Descrição</label>
+                    <div class="control">
+                        <textarea class="textarea" name="descricao" id="descricao" placeholder="Descreva o problema" disabled required></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Visita Técnica</label>
+                    <div class="control">
+                        <input class="input" type="date" name="data_visita" id="data_visita">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">Enviar Chamado</button>
+                    </div>
+                </div>
+            </form>
+            <div id="prioridade" class="prioridade"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <h2 class="title is-4">Chamado Enviado com Sucesso!</h2>
+                <p>Seu chamado foi registrado com o código: <span id="codigoChamado"></span></p>
+                <p>Protocolo gerado: <span id="protocoloChamado"></span></p>
+                <p class="is-size-7">Um email com estas informações foi enviado para o endereço cadastrado.</p>
+                <button class="button is-primary mt-4" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDescricao() {
+            var select = document.getElementById("problema");
+            var descricao = document.getElementById("descricao");
+            var internetSubcategoria = document.getElementById("internetSubcategoria");
+            descricao.disabled = (select.value === "");
+            internetSubcategoria.style.display = (select.value === "Internet") ? "block" : "none";
+            
+            // Exibindo a prioridade com base na seleção
+            var prioridade = document.getElementById("prioridade");
+            switch(select.value) {
+                case "Catraca":
+                case "Antenas (WI-FI)":
+                    prioridade.innerText = "PRIORIDADE: URGENTE";
+                    prioridade.className = "prioridade urgente";
+                    break;
+                case "Internet":
+                case "Notebook/Desktop":
+                case "Aplicacoes":
+                    prioridade.innerText = "PRIORIDADE: ALTA";
+                    prioridade.className = "prioridade alta";
+                    break;
+                case "Webcam (Logitech C920)":
+                case "Sistema EVO":
+                case "Rede (Distribuição de Rede)":
+                case "Carregadores":
+                case "TVs":
+                    prioridade.innerText = "PRIORIDADE: MÉDIA";
+                    prioridade.className = "prioridade media";
+                    break;
+                case "Teclado":
+                case "Mouse":
+                    prioridade.innerText = "PRIORIDADE: BAIXA";
+                    prioridade.className = "prioridade baixa";
+                    break;
+                default:
+                    prioridade.innerText = "";
+                    prioridade.className = "";
+            }
+        }
+
+        function abrirModal(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Coletar os dados do formulário
+            const formData = new FormData(document.getElementById('chamadoForm'));
+
+            // Enviar dados para o servidor via fetch
+            fetch('/abrir-chamado', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Verifica se a resposta possui status "success"
+                if(data.status === 'success') {
+                    // Preencher as informações no modal com os dados enviados pelo servidor
+                    document.getElementById('codigoChamado').innerText = data.codigo_chamado;
+                    document.getElementById('protocoloChamado').innerText = data.protocolo_chamado;
+
+                    // Exibir o modal após 3 segundos (3000ms)
+                    setTimeout(function() {
+                        document.getElementById('modal').classList.add('is-active');
+                    }, 3000);
+                } else {
+                    alert('Erro ao abrir chamado. Tente novamente.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao abrir chamado. Tente novamente.');
+            });
+        }
+
+        function fecharModal() {
+            document.getElementById('modal').classList.remove('is-active');
+            // Limpar o formulário
+            document.getElementById('chamadoForm').reset();
+            // Redirecionar para a página inicial
+            window.location.href = "/";
+        }
+
+        // Adicionar listener para fechar o modal quando clicar fora dele
+        document.addEventListener('DOMContentLoaded', () => {
+            const modalBackground = document.querySelector('.modal-background');
+            if(modalBackground) {
+                modalBackground.addEventListener('click', fecharModal);
+            }
+        });
+    </script>
+</body>
+</html>
