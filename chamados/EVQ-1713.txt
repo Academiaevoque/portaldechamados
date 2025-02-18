@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-1713
-Solicitante: sss
-Descrição: tt
-Protocolo: 840847-1

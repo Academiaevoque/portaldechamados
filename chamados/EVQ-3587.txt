@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-3587
-Solicitante: sss
-Descrição: dd
-Protocolo: 839381-3

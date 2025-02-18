@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-1436
-Solicitante: EU
-Descrição: SLA
-Protocolo: 542954-2

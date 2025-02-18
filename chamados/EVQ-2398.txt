@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-2398
-Solicitante: sss
-Descrição: cc
-Protocolo: 248720-3

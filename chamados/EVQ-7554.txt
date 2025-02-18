@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-7554
-Solicitante: sss
-Descrição: C
-Protocolo: 433759-6

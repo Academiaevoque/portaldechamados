@@ -1,7 +1,0 @@
-Código do Chamado: EVQ-5723
-Solicitante: sss
-Descrição: dd
-Protocolo: 705429-1
-Data de abertura: 04/02/2025 23:09
-Data de agendamento: 2025-02-28
-Status: Aberto

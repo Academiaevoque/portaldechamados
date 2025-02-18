@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-2397
-Solicitante: sss
-Descrição: C
-Protocolo: 235180-5

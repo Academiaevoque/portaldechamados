@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-3486
-Solicitante: ddd
-Descrição: dd
-Protocolo: 745825-2

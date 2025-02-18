@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-3683
-Solicitante: sss
-Descrição: xx
-Protocolo: 855456-3

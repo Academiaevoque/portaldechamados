@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-2762
-Solicitante: ddd
-Descrição: cc
-Protocolo: 425612-1

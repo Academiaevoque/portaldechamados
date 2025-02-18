@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-8409
-Solicitante: sss
-Descrição: ddd
-Protocolo: 414423-8

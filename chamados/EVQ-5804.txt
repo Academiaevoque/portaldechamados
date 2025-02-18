@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-5804
-Solicitante: sss
-Descrição: ccc
-Protocolo: 382513-7

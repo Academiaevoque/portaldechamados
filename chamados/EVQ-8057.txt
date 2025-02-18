@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-8057
-Solicitante: sss
-Descrição: ccc
-Protocolo: 946216-6

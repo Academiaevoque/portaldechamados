@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-9406
-Solicitante: sss
-Descrição: cc
-Protocolo: 535015-3

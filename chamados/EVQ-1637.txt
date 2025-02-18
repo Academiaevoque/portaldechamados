@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-1637
-Solicitante: sss
-Descrição: CCC
-Protocolo: 727700-2

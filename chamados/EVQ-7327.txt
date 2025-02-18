@@ -1,9 +1,0 @@
-Chamado: EVQ-7327
-Protocolo: 630727-6
-Prioridade: Média
-Status: 
-Nome do Solicitante: sss
-Cargo: Gerente Regional
-Problema Reportado: Aplicacoes
-Data de Abertura: 05/02/2025 10:37
-Visita Técnica: 2025-02-17

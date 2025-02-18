@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-3195
-Solicitante: sss
-Descrição: CCC
-Protocolo: 771082-5

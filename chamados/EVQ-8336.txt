@@ -1,4 +1,0 @@
-Código do Chamado: EVQ-8336
-Solicitante: sss
-Descrição: CCC
-Protocolo: 881019-5
