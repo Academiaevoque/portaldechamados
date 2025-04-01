@@ -2,28 +2,64 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Portal de Chamados</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Portal Evoque</title>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      transition: background-color 0.3s, color 0.3s;
-      background-color: #f4f7fc; /* Fundo suave para o corpo da página */
+      background-image: url('static/images/fundo.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+      overflow-y: auto;
+      position: relative; /* Adicionado para suportar o logout fixo */
     }
+    
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    
+    /* Menu Lateral para Desktop */
     .menu {
-      background: linear-gradient(135deg, #2c3e50, #4e73df);
+      background: url('/static/images/menu.png') no-repeat center center;
+      background-size: cover;
       padding: 20px;
       height: 100vh;
       color: white;
+      position: relative;
     }
+    
+    .menu::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+    
     .menu-list__profile {
       display: flex;
       align-items: center;
       flex-direction: column;
       text-align: center;
       margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
     }
+    
     .menu-list__profile .image img {
       width: 70px;
       height: 70px;
@@ -31,29 +67,59 @@
       border-radius: 50%;
       border: 3px solid white;
     }
+    
     .menu-list__profile .title {
       font-size: 1.3rem;
       font-weight: bold;
       margin-top: 10px;
     }
+    
     .menu-list a {
       display: flex;
       align-items: center;
       padding: 10px 15px;
       color: white;
       font-weight: bold;
-      transition: background 0.3s;
+      transition: all 0.3s ease-in-out;
       border-radius: 8px;
+      position: relative;
+      z-index: 2;
+      transform: translateX(0);
     }
+    
     .menu-list a:hover {
       background: rgba(255, 255, 255, 0.2);
+      transform: translateX(8px);
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
+    
     .menu-list a i {
       margin-right: 10px;
+      transition: transform 0.3s ease-in-out;
     }
+    
+    .menu-list a:hover i {
+      transform: scale(1.1);
+      color: #fff;
+    }
+    
     .menu-list .active {
       background: rgba(255, 255, 255, 0.3);
+      transform: translateX(5px);
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     }
+    
+    .menu-list .active i {
+      transform: scale(1.05);
+    }
+    
+    .dashboard {
+      background-color: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
     .dashboard__header {
       text-align: center;
       font-size: 2rem;
@@ -63,6 +129,7 @@
       letter-spacing: 1px;
       text-transform: uppercase;
     }
+    
     .dashboard__subtitle {
       text-align: center;
       font-size: 1.2rem;
@@ -71,11 +138,14 @@
       margin-bottom: 40px;
       color: #888;
     }
+    
     .cards-container {
       display: flex;
       justify-content: center;
       gap: 20px;
+      flex-wrap: wrap;
     }
+    
     .card {
       width: 200px;
       padding: 15px;
@@ -84,22 +154,19 @@
       text-align: center;
       font-weight: bold;
     }
+    
     .card.concluido {
       background-color: #28a745;
     }
+    
     .card.andamento {
       background-color: #ffc107;
     }
-    .card.aguardando {
-      background-color: #dc3545; /* Mantém a cor vermelha, mas muda o texto */
+    
+    .card.pendente {
+      background-color: #dc3545;
     }
-    .dashboard {
-      background-color: white; /* Fundo branco para a área central */
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para destacar */
-    }
-    /* Estilo do bloco dos últimos chamados */
+    
     .ultimo-chamado {
       margin-top: 40px;
       padding: 20px;
@@ -107,107 +174,342 @@
       border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+    
     .ultimo-chamado h3 {
       font-size: 1.5rem;
       margin-bottom: 20px;
       color: #4e73df;
       text-align: center;
     }
+    
     .ultimo-chamado table {
       width: 100%;
       border-collapse: collapse;
     }
-    .ultimo-chamado table, .ultimo-chamado th, .ultimo-chamado td {
-      border: 1px solid #ddd;
-    }
+    
     .ultimo-chamado th, .ultimo-chamado td {
       padding: 10px;
       text-align: left;
+      border: 1px solid #ddd;
     }
+    
     .ultimo-chamado th {
       background-color: #f4f7fc;
       color: #4e73df;
     }
+    
     .ultimo-chamado td {
       color: #333;
+    }
+    
+    /* Elementos para Mobile ficam ocultos em Desktop */
+    .mobile-menu,
+    .mobile-menu-button {
+      display: none;
+    }
+    
+    /* Logout e Tipo de Conta */
+    .logout-container {
+      position: fixed; /* Alterado para fixed para ficar fora do container */
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1100; /* Aumentado para ficar acima do menu mobile */
+    }
+    
+    .logout-container .account-type {
+      font-size: 1rem;
+      color: #fff; /* Branco para contrastar com o fundo */
+      font-weight: bold;
+      text-transform: capitalize;
+      background: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para legibilidade */
+      padding: 5px 10px;
+      border-radius: 4px;
+    }
+    
+    .logout-container a {
+      color: #dc3545;
+      font-size: 1.5rem; /* Aumentado para melhor visibilidade */
+      transition: color 0.3s ease;
+    }
+    
+    .logout-container a:hover {
+      color: #a71d2a;
+    }
+    
+    /* MOBILE: Ajustes para dispositivos móveis */
+    @media screen and (max-width: 768px) {
+      /* Oculta a coluna do menu (desktop) */
+      .column.is-3 {
+        display: none;
+      }
+    
+      /* Botão do menu mobile: reposicionado e menor */
+      .mobile-menu-button {
+        display: block;
+        position: fixed;
+        top: 40px;
+        left: 20px;
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        z-index: 1100;
+        cursor: pointer;
+      }
+    
+      /* Modal de menu mobile com design elegante */
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 90%;
+        max-width: 350px;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        padding: 30px 20px;
+        color: #333;
+        z-index: 1050;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+      }
+      .mobile-menu.active {
+        display: block;
+      }
+    
+      /* Estilo dos links no modal mobile para garantir visibilidade */
+      .mobile-menu .menu-list a {
+        display: block;
+        color: #333;
+        background: #f2f2f2;
+        padding: 10px 15px;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s ease-in-out;
+      }
+      .mobile-menu .menu-list a:hover {
+        background: #ddd;
+        transform: translateX(8px);
+      }
+    
+      /* Botão "Fechar" no modal mobile */
+      .mobile-menu-close {
+        display: block;
+        margin: 20px auto 0;
+        background: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    
+      /* Ajusta o título da dashboard para ficar um pouco mais para baixo */
+      .dashboard__header {
+        margin-top: 30px;
+      }
+      
+      /* Ajuste do logout no mobile */
+      .logout-container {
+        top: 10px;
+        right: 10px;
+      }
+      .logout-container .account-type {
+        font-size: 0.9rem;
+      }
+      .logout-container a {
+        font-size: 1.2rem;
+      }
+    }
+    
+    /* Outras media queries mantêm o estilo original */
+    @media screen and (max-width: 1024px) {
+      .menu {
+        height: auto;
+        padding: 15px;
+      }
+      .columns.is-gapless {
+        flex-direction: column;
+      }
+      .menu-list__profile .title {
+        font-size: 1.1rem;
+      }
+      .menu-list a {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+      .card {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .ultimo-chamado h3 {
+        font-size: 1.3rem;
+      }
+      .ultimo-chamado th, .ultimo-chamado td {
+        padding: 8px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .menu {
+        padding: 5px;
+      }
+      .menu-list__profile .title {
+        font-size: 0.9rem;
+      }
+      .menu-list a {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+      }
+      .dashboard__header {
+        font-size: 1.3rem;
+      }
+      .dashboard__subtitle {
+        font-size: 0.9rem;
+      }
+      .card {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      .ultimo-chamado h3 {
+        font-size: 1.1rem;
+      }
+      .ultimo-chamado th, .ultimo-chamado td {
+        padding: 6px;
+        font-size: 0.8rem;
+      }
+      .logout-container .account-type {
+        font-size: 0.8rem;
+      }
+      .logout-container a {
+        font-size: 1rem;
+      }
     }
   </style>
 </head>
 <body>
-<div id="app">
-  <div class="container">
-    <div class="columns is-gapless">
-      <div class="column is-3">
-        <aside class="menu">
-          <div class="menu-list__profile">
-            <figure class="image">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9m4yL0aiJvvkqisEp4WNovX6Lu_JkU-VUcg&s" alt="Logo da Evoque Academias">
-            </figure>
-            <p class="title is-5">EVOQUE ACADEMIAS</p>
+  <!-- Botão de menu mobile (apenas em dispositivos móveis) -->
+  <button class="mobile-menu-button" onclick="toggleMobileMenu()">
+    <i class="fas fa-bars"></i><span> MENU</span>
+  </button>
+  
+  <!-- Modal de menu mobile (apenas em dispositivos móveis) -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="menu-list__profile">
+      <figure class="image">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9m4yL0aiJvvkqisEp4WNovX6Lu_JkU-VUcg&s" alt="Logo da Evoque Academias">
+      </figure>
+      <p class="title is-5">EVOQUE ACADEMIAS</p>
+    </div>
+    <ul class="menu-list">
+      <li><a href="{{ url_for('index') }}" class="active"><i class="fas fa-home"></i> INÍCIO</a></li>
+      <li><a href="{{ url_for('abrir_chamado') }}?next={{ url_for('abrir_chamado') | urlencode }}"><i class="fas fa-plus-circle"></i> ABRIR CHAMADO</a></li>
+      <li><a href="{{ url_for('gerar_relatorio') }}?next={{ url_for('gerar_relatorio') | urlencode }}"><i class="fas fa-file-alt"></i> GERAR RELATÓRIO</a></li>
+      <li><a href="{{ url_for('ver_meus_chamados') }}?next={{ url_for('ver_meus_chamados') | urlencode }}"><i class="fas fa-search"></i> MEUS CHAMADOS</a></li>
+      <li><a href="{{ url_for('compras_holding') }}?next={{ url_for('compras_holding') | urlencode }}"><i class="fas fa-boxes"></i> SOLICITAR COMPRA</a></li>
+    </ul>
+    <!-- Botão "Fechar" para o modal mobile -->
+    <button class="mobile-menu-close" onclick="toggleMobileMenu()">Fechar</button>
+  </div>
+  
+  <!-- Logout e Tipo de Conta (fora do container) -->
+  <div class="logout-container">
+    <span class="account-type">{{ session['role'] | capitalize }}</span>
+    <a href="{{ url_for('logout') }}" title="Sair">
+      <i class="fas fa-sign-out-alt"></i>
+    </a>
+  </div>
+  
+  <div id="app">
+    <div class="container">
+      <div class="columns is-gapless">
+        <!-- Menu Lateral para Desktop -->
+        <div class="column is-3">
+          <aside class="menu">
+            <div class="menu-list__profile">
+              <figure class="image">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9m4yL0aiJvvkqisEp4WNovX6Lu_JkU-VUcg&s" alt="Logo da Evoque Academias">
+              </figure>
+              <p class="title is-5">EVOQUE ACADEMIAS</p>
+            </div>
+            <ul class="menu-list">
+              <li><a href="{{ url_for('index') }}" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+              <li><a href="{{ url_for('abrir_chamado') }}?next={{ url_for('abrir_chamado') | urlencode }}"><i class="fas fa-plus-circle"></i> ABRIR CHAMADO</a></li>
+              <li><a href="{{ url_for('gerar_relatorio') }}?next={{ url_for('gerar_relatorio') | urlencode }}"><i class="fas fa-file-alt"></i> SOLICITAR RELATÓRIO</a></li>
+              <li><a href="{{ url_for('ver_meus_chamados') }}?next={{ url_for('ver_meus_chamados') | urlencode }}"><i class="fas fa-search"></i> VER MEUS CHAMADOS</a></li>
+              <li><a href="{{ url_for('compras_holding') }}?next={{ url_for('compras_holding') | urlencode }}"><i class="fas fa-boxes"></i> SOLICITAR COMPRA</a></li>
+            </ul>
+          </aside>
+        </div>
+    
+        <!-- Conteúdo Principal -->
+        <div class="column is-9">
+          <div class="dashboard">
+            <p class="dashboard__header">DASHBOARD: PORTAL DE CHAMADOS</p>
+            <p class="dashboard__subtitle">Status dos chamados</p>
+            <div class="cards-container">
+              <div class="card concluido">Chamados Concluídos: {{ concluidos }}</div>
+              <div class="card andamento">Chamados em Andamento: {{ andamento }}</div>
+              <div class="card pendente">Chamados Pendentes: {{ pendentes }}</div>
+            </div>
           </div>
-          <ul class="menu-list">
-            <li><a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="/abrir-chamado"><i class="fas fa-plus-circle"></i> Abrir Chamado</a></li>
-            <li><a href="/gerar-relatorio"><i class="fas fa-file-alt"></i> Gerar Relatório</a></li>
-            <li><a href="/ver-meus-chamados"><i class="fas fa-search"></i> Ver Meus Chamados</a></li>
-            <li><a href="/solicitacao-compra"><i class="fas fa-shopping-cart"></i> Solicitação de Compra</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Configurações</a></li>
-          </ul>
-        </aside>
-      </div>
-      <div class="column is-9">
-        <div class="dashboard">
-          <p class="dashboard__header">DASHBOARD: PORTAL DE CHAMADOS</p>
-          <p class="dashboard__subtitle">Status dos Chamados</p>
-<div class="cards-container">
-    <div class="card concluido">Chamados Concluídos: {{ concluidos }}</div>
-    <div class="card andamento">Chamados em Andamento: {{ andamento }}</div>
-    <div class="card aguardando">Chamados Aguardando: {{ pendentes }}</div>
-</div>
-
-
-        <!-- Bloco de Últimos Chamados -->
-        <div class="ultimo-chamado">
-          <h3>Últimos Chamados</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>UNIDADE</th>
-                <th>PROTOCOLO</th>
-                <th>CHAMADO</th>
-                <th>DATA</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% if chamados_recentes %}
-                {% for chamado in chamados_recentes %}
-                  <tr>
-                    <!-- Aqui, "UNIDADE" será representada pelo nome do solicitante -->
-                    <td>{{ chamado.nome_solicitante }}</td>
-                    <!-- Exibe "#" seguido do número do protocolo -->
-                    <td>#{{ chamado.protocolo }}</td>
-                    <!-- Exibe o código do chamado ocultando os dois últimos dígitos, exemplo: EVQ-15## -->
-                    <td>{{ chamado.codigo_chamado[:6] }}##</td>
-                    <td>
-                      {% if chamado.data_abertura %}
-                        {{ chamado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
-                      {% else %}
-                        N/A
-                      {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
-              {% else %}
+    
+          <!-- Bloco de Últimos Chamados -->
+          <div class="ultimo-chamado">
+            <h3>Últimos chamados</h3>
+            <table>
+              <thead>
                 <tr>
-                  <td colspan="4">Nenhum chamado recente.</td>
+                  <th>SOLICITANTE</th>
+                  <th>PROTOCOLO</th>
+                  <th>CHAMADO</th>
+                  <th>DATA</th>
                 </tr>
-              {% endif %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% if chamados_recentes %}
+                  {% for chamado in chamados_recentes %}
+                    <tr>
+                      <td>{{ chamado.nome_solicitante }}</td>
+                      <td>#{{ chamado.protocolo }}</td>
+                      <td>{{ chamado.codigo_chamado[:6] }}##</td>
+                      <td>
+                        {% if chamado.data_abertura %}
+                          {{ chamado.data_abertura.strftime('%d/%m/%Y %H:%M') }}
+                        {% else %}
+                          N/A
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                {% else %}
+                  <tr>
+                    <td colspan="4">Nenhum chamado recente.</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-</body>
+  
+  <script>
+    // Função para alternar a exibição do modal do menu mobile
+    function toggleMobileMenu() {
+      var mobileMenu = document.getElementById('mobileMenu');
+      mobileMenu.classList.toggle('active');
+    }
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'929165d61abbe9f3',t:'MTc0MzQ0MDM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

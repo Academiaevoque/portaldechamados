@@ -2,21 +2,56 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Abrir Chamado</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css'>
     <style>
+        body {
+            background-image: url('static/images/fundo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+
+        .box {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input, .textarea, .select select {
+            font-size: 16px !important;
+            height: 2.75em !important;
+        }
+
         .prioridade {
-            margin-top: 10px;
+            margin: 15px 0;
             padding: 15px;
             border-radius: 8px;
-            font-size: 1.2em;
+            font-size: 1.1em;
             font-weight: bold;
             text-transform: uppercase;
-            display: inline-block;
-            width: 100%;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .prioridade.urgente {
             background-color: #ffb3b3;
             color: #d80000;
@@ -33,37 +68,65 @@
             background-color: #99e699;
             color: #267d2f;
         }
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
+
+        .button {
+            background-color: #36a7e3;
+            color: white;
+            border: none;
         }
-        .modal-content p {
-            margin: 15px 0;
-            font-size: 1.1em;
+
+        .button:hover {
+            background-color: #2f85c7;
         }
-        .modal-content span {
-            font-weight: bold;
-            color: #485fc7;
+
+        .button:active {
+            background-color: #1e6099;
+        }
+
+        /* Adicionando espaço entre o ícone e o texto no botão */
+        .button .file-icon, .button .fas {
+            margin-right: 10px; /* Espaço de 10px à direita do ícone */
+        }
+
+        @media screen and (max-width: 768px) {
+            .box {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .title.is-4 {
+                font-size: 1.5rem !important;
+            }
+            .button {
+                height: 3em;
+                font-size: 1rem;
+                width: 100%;
+            }
+
+            .prioridade {
+                font-size: 1em;
+                padding: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" style="max-width: 600px; margin: 50px auto;">
+    <div class="container">
         <div class="box">
-            <h1 class="title is-4">Abrir Chamado</h1>
+            <h1 class="title is-4 has-text-centered mb-5">EVOQUE ACADEMIA - ABRIR CHAMADO</h1>
             <form id="chamadoForm" onsubmit="abrirModal(event)">
+                <!-- Campos do Formulário -->
                 <div class="field">
-                    <label class="label">Nome do Solicitante</label>
+                    <label class="label">Nome do solicitante:</label>
                     <div class="control">
-                        <input class="input" type="text" name="nome_solicitante" required>
+                        <input class="input is-fullwidth" type="text" name="nome_solicitante" required>
                     </div>
                 </div>
+
                 <div class="field">
-                    <label class="label">Gerente ou Gerente Regional</label>
+                    <label class="label">Cargo:</label>
                     <div class="control">
-                        <div class="select">
+                        <div class="select is-fullwidth">
                             <select name="cargo" required>
                                 <option value="Gerente">Gerente</option>
                                 <option value="Gerente Regional">Gerente Regional</option>
@@ -71,22 +134,79 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="field">
-                    <label class="label">E-mail</label>
+                    <label class="label">E-mail:</label>
                     <div class="control">
-                        <input class="input" type="email" name="email" required>
+                        <input class="input is-fullwidth" type="email" name="email" required>
                     </div>
                 </div>
+
                 <div class="field">
-                    <label class="label">Telefone</label>
+                    <label class="label">Telefone:</label>
                     <div class="control">
-                        <input class="input" type="tel" name="telefone" pattern="\d{2}\d{9}" placeholder="Ex: 11987654321" required>
+                        <input class="input is-fullwidth" type="tel" name="telefone" pattern="\d{2}\d{9}" placeholder="Ex: 11987654321" required>
                     </div>
                 </div>
+
+                <!-- Unidade -->
                 <div class="field">
-                    <label class="label">Problema Reportado</label>
+                    <label class="label">Selecione a unidade:</label>
                     <div class="control">
-                        <div class="select">
+                        <div class="select is-fullwidth">
+                            <select name="unidade" required>
+                                <option value="">Selecione</option>
+                                <option value="1">GUILHERMINA - 1</option>
+                                <option value="4">DIADEMA - 4</option>
+                                <option value="5">SHOPPING MAUÁ - 5</option>
+                                <option value="6">RIBEIRÃO PIRES - 6</option>
+                                <option value="7">HOMERO THON - 7</option>
+                                <option value="8">AV. PORTUGAL - 8</option>
+                                <option value="9">VALO VELHO - 9</option>
+                                <option value="10">ITAMARATI - 10</option>
+                                <option value="11">AV. RIO BRANCO - 11</option>
+                                <option value="12">PEREIRA BARRETO - 12</option>
+                                <option value="13">GIOVANNI BREDA - 13</option>
+                                <option value="14">BOQUEIRÃO - 14</option>
+                                <option value="15">PARQUE DO CARMO - 15</option>
+                                <option value="16">ZAIRA - 16</option>
+                                <option value="17">HELIOPOLIS - 17</option>
+                                <option value="19">PIMENTAS - 19</option>
+                                <option value="20">GUAIANASES - 20</option>
+                                <option value="21">AV. GOIÁS - 21</option>
+                                <option value="22">BOM CLIMA - 22</option>
+                                <option value="23">CAMPO GRANDE - 23</option>
+                                <option value="24">JAGUARÉ - 24</option>
+                                <option value="25">ITAQUERA - 25</option>
+                                <option value="26">EXTREMA - 26</option>
+                                <option value="27">MOGI DAS CRUZES - 27</option>
+                                <option value="28">ALAMEDA - 28</option>
+                                <option value="29">JARDIM GOIAS - 29</option>
+                                <option value="30">PASSEIO DAS AGUAS - 30</option>
+                                <option value="31">SÃO VICENTE - 31</option>
+                                <option value="32">CAMILÓPOLIS - 32</option>
+                                <option value="33">INDAIATUBA - 33</option>
+                                <option value="34">VILA PRUDENTE - 34</option>
+                                <option value="35">LARANJAL PAULISTA - 35</option>
+                                <option value="36">SACOMÃ - 36</option>
+                                <option value="37">VILA NOVA - 37</option>
+                                <option value="38">SAPOPEMBA - 38</option>
+                                <option value="39">POÁ - 39</option>
+                                <option value="40">CURITIBA - 40</option>
+                                <option value="41">FRANCA - 41</option>
+                                <option value="130">JARDIM SÃO PAULO - 130</option>
+                                <option value="131">CARAPICUIBA - 131</option>
+                                <option value="042">ITAQUERA 2 - 042</option>										
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problema Reportado -->
+                <div class="field">
+                    <label class="label">Problema Reportado:</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
                             <select name="problema" id="problema" onchange="toggleDescricao()" required>
                                 <option value="">Selecione</option>
                                 <option value="Catraca">Catraca</option>
@@ -99,11 +219,11 @@
                     </div>
                 </div>
 
-                <!-- Subcategoria para 'Internet' -->
+                <!-- Subcategoria Internet -->
                 <div class="field" id="internetSubcategoria" style="display: none;">
                     <label class="label">Selecione o item de Internet</label>
                     <div class="control">
-                        <div class="select">
+                        <div class="select is-fullwidth">
                             <select name="internet_item">
                                 <option value="">Selecione</option>
                                 <option value="Wi-fi">Wi-fi</option>
@@ -117,25 +237,41 @@
                     </div>
                 </div>
 
+                <!-- Descrição -->
                 <div class="field">
-                    <label class="label">Descrição</label>
+                    <label class="label">Descrição:</label>
                     <div class="control">
-                        <textarea class="textarea" name="descricao" id="descricao" placeholder="Descreva o problema" disabled required></textarea>
+                        <textarea class="textarea is-fullwidth" name="descricao" id="descricao" placeholder="Descreva o problema" disabled required></textarea>
                     </div>
                 </div>
+
+                <!-- Visita Técnica -->
                 <div class="field">
-                    <label class="label">Visita Técnica</label>
+                    <label class="label">Visita Técnica:</label>
                     <div class="control">
-                        <input class="input" type="date" name="data_visita" id="data_visita">
+                        <input class="input is-fullwidth" type="date" name="data_visita" id="data_visita">
                     </div>
                 </div>
-                <div class="field">
+
+                <!-- Prioridade -->
+                <div id="prioridade" class="prioridade"></div>
+
+                <!-- Botão de Envio -->
+                <div class="field mt-6">
                     <div class="control">
-                        <button type="submit" class="button is-primary">Enviar Chamado</button>
+                        <button type="submit" class="button is-fullwidth is-medium">
+                            <i class="fas fa-paper-plane"></i> Enviar chamado
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botão Voltar -->
+                <div class="field mt-2">
+                    <div class="control">
+                        <button type="button" class="button is-fullwidth is-medium" onclick="voltar()">Voltar</button>
                     </div>
                 </div>
             </form>
-            <div id="prioridade" class="prioridade"></div>
         </div>
     </div>
 
@@ -144,11 +280,15 @@
         <div class="modal-background"></div>
         <div class="modal-content">
             <div class="box">
-                <h2 class="title is-4">Chamado Enviado com Sucesso!</h2>
-                <p>Seu chamado foi registrado com o código: <span id="codigoChamado"></span></p>
-                <p>Protocolo gerado: <span id="protocoloChamado"></span></p>
-                <p class="is-size-7">Um email com estas informações foi enviado para o endereço cadastrado.</p>
-                <button class="button is-primary mt-4" onclick="fecharModal()">Fechar</button>
+                <h2 class="title is-4 has-text-centered">Chamado enviado com sucesso!</h2>
+                <div class="content has-text-centered">
+                    <p><strong>Código:</strong> <span id="codigoChamado"></span></p>
+                    <p><strong>Protocolo:</strong> <span id="protocoloChamado"></span></p>
+                    <p class="has-text-grey is-size-7 mt-3">
+                        Um email com estas informações foi enviado para o endereço cadastrado.
+                    </p>
+                    <button class="button mt-4" onclick="fecharModal()">Fechar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -161,7 +301,6 @@
             descricao.disabled = (select.value === "");
             internetSubcategoria.style.display = (select.value === "Internet") ? "block" : "none";
             
-            // Exibindo a prioridade com base na seleção
             var prioridade = document.getElementById("prioridade");
             switch(select.value) {
                 case "Catraca":
@@ -195,28 +334,19 @@
         }
 
         function abrirModal(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
-
-            // Coletar os dados do formulário
+            event.preventDefault();
             const formData = new FormData(document.getElementById('chamadoForm'));
 
-            // Enviar dados para o servidor via fetch
             fetch('/abrir-chamado', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
-                // Verifica se a resposta possui status "success"
                 if(data.status === 'success') {
-                    // Preencher as informações no modal com os dados enviados pelo servidor
                     document.getElementById('codigoChamado').innerText = data.codigo_chamado;
                     document.getElementById('protocoloChamado').innerText = data.protocolo_chamado;
-
-                    // Exibir o modal após 3 segundos (3000ms)
-                    setTimeout(function() {
-                        document.getElementById('modal').classList.add('is-active');
-                    }, 3000);
+                    document.getElementById('modal').classList.add('is-active');
                 } else {
                     alert('Erro ao abrir chamado. Tente novamente.');
                 }
@@ -229,13 +359,15 @@
 
         function fecharModal() {
             document.getElementById('modal').classList.remove('is-active');
-            // Limpar o formulário
             document.getElementById('chamadoForm').reset();
-            // Redirecionar para a página inicial
             window.location.href = "/";
         }
 
-        // Adicionar listener para fechar o modal quando clicar fora dele
+        function voltar() {
+            window.location.href = "/";
+        }
+
+        document.querySelector('.modal-background').addEventListener('click', fecharModal);
         document.addEventListener('DOMContentLoaded', () => {
             const modalBackground = document.querySelector('.modal-background');
             if(modalBackground) {

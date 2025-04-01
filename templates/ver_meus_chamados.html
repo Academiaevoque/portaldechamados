@@ -3,19 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Meus Chamados</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
+    <title>Ver meus chamados - Portal de Chamados</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css'>
     <style>
-        /* Estilo para o modal */
+        body {
+            background-image: url('static/images/fundo.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .card-custom {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+
+        .card-header-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .button {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            background-color: #36a7e3;
+            color: white;
+            font-weight: bold;
+            border: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .close-btn {
+            background-color: #36a7e3;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .button:hover, .close-btn:hover {
+            background-color: #2f85c7;
+        }
+
+        .button:active, .close-btn:active {
+            background-color: #1e6099;
+        }
+
+        /* Estilo do Modal */
         .modal {
-            display: none; /* Inicialmente escondido */
+            display: none;
             position: fixed;
-            z-index: 1;
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Cor de fundo semitransparente */
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
             justify-content: center;
             align-items: center;
         }
@@ -24,86 +103,158 @@
             display: flex;
         }
 
+        .modal-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
         .modal-content {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
-            width: 50%; /* Tamanho do modal */
-            max-width: 600px;
+            width: 90%;
+            max-width: 500px;
+            text-align: left;
+            position: relative;
+            z-index: 1001;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .modal-content h3 {
-            margin-bottom: 20px;
             font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .modal-content p {
-            margin: 5px 0;
+            margin: 10px 0;
             font-size: 1rem;
         }
 
-        .close-btn {
-            background-color: red;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 5px;
-            margin-top: 10px;
+        /* Estilos para Mobile */
+        @media screen and (max-width: 768px) {
+            .card-custom {
+                padding: 1.5rem;
+                margin: 10px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .card-header-title {
+                font-size: 1.5rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .input {
+                padding: 1rem;
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+
+            .button {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+
+            .modal-content h3 {
+                font-size: 1.3rem;
+            }
+
+            .modal-content p {
+                font-size: 0.9rem;
+            }
         }
 
-        .close-btn:hover {
-            background-color: darkred;
+        /* Ajustes para telas muito pequenas (ex: iPhone SE) */
+        @media screen and (max-width: 320px) {
+            .card-custom {
+                padding: 1rem;
+            }
+
+            .card-header-title {
+                font-size: 1.3rem;
+            }
+
+            .input {
+                padding: 0.8rem;
+                font-size: 0.95rem;
+            }
+
+            .button {
+                padding: 0.8rem;
+                font-size: 0.95rem;
+            }
         }
 
-        /* Centralizando o modal */
-        .modal.is-active .modal-background {
-            display: none; /* Oculta o fundo escuro */
+        /* Mantém hover apenas para desktop */
+        @media (hover: hover) and (pointer: fine) {
+            .card-custom:hover {
+                transform: scale(1.01);
+            }
+        }
+
+        .input:focus {
+            border-color: #36a7e3;
+            outline: none;
+            box-shadow: 0 0 8px rgba(54, 167, 227, 0.4);
         }
     </style>
 </head>
 <body>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Ver Meus Chamados</h1>
-            <form method="POST">
-                <div class="field">
-                    <label class="label">Código do Chamado</label>
-                    <div class="control">
-                        <input class="input" type="text" name="codigo_chamado" placeholder="Insira o código do chamado" required>
-                    </div>
-                </div>
+    <div class="card-custom">
+        <p class="card-header-title">Verificar status</p>
+        <form method="POST">
+            <div class="field">
+                <label class="label">Insira o código do chamado:</label>
                 <div class="control">
-                    <button class="button is-primary" type="submit">Ver Status</button>
+                    <input class="input" type="text" name="codigo_chamado" placeholder="Digite o código do chamado" required>
                 </div>
-            </form>
-            {% if chamado %}
-                <div class="modal is-active" id="modalChamado">
-                    <div class="modal-background"></div>
-                    <div class="modal-content">
-                        <h3 class="title">Informações do Chamado</h3>
-                        <p><strong>Código do Chamado:</strong> {{ chamado.codigo_chamado }}</p>
-                        <p><strong>Protocolo:</strong> {{ chamado.protocolo }}</p>
-                        <p><strong>Prioridade:</strong> {{ chamado.prioridade }}</p>
-                        <p><strong>Status:</strong> {{ chamado.status or 'Pendente' }}</p>
-                        <p><strong>Nome do Solicitante:</strong> {{ chamado.nome_solicitante }}</p>
-                        <p><strong>Cargo:</strong> {{ chamado.cargo }}</p>
-                        <p><strong>Problema Reportado:</strong> {{ chamado.problema_reportado }}</p>
-                        <p><strong>Data de Abertura:</strong> {{ chamado.data_abertura }}</p>
-                        <p><strong>Visita Técnica:</strong> {{ chamado.visita_tecnica }}</p>
-                        <button class="close-btn" onclick="closeModal()">Fechar</button>
-                    </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button" type="submit">Ver status</button>
                 </div>
-            {% endif %}
-        </div>
-    </section>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button type="button" class="button" onclick="voltar()">Voltar</button>
+                </div>
+            </div>
+        </form>
+        {% if chamado %}
+            <div class="modal is-active" id="modalChamado">
+                <div class="modal-background" onclick="closeModal()"></div>
+                <div class="modal-content">
+                    <h3 class="title">Informações do Chamado</h3>
+                    <p><strong>Código do Chamado:</strong> {{ chamado.codigo_chamado }}</p>
+                    <p><strong>Protocolo:</strong> {{ chamado.protocolo }}</p>
+                    <p><strong>Prioridade:</strong> {{ chamado.prioridade }}</p>
+                    <p><strong>Status:</strong> {{ chamado.status or 'Pendente' }}</p>
+                    <p><strong>Nome do Solicitante:</strong> {{ chamado.nome_solicitante }}</p>
+                    <p><strong>Cargo:</strong> {{ chamado.cargo }}</p>
+                    <p><strong>Problema Reportado:</strong> {{ chamado.problema_reportado }}</p>
+                    <p><strong>Data de Abertura:</strong> {{ chamado.data_abertura }}</p>
+                    <p><strong>Visita Técnica:</strong> {{ chamado.visita_tecnica }}</p>
+                    <button class="close-btn" onclick="closeModal()">Fechar</button>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 
     <script>
         // Função para fechar o modal
         function closeModal() {
             document.getElementById('modalChamado').classList.remove('is-active');
         }
+
+        // Função para voltar
+        function voltar() {
+            window.location.href = "/";
+        }
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'929099f78b2d4adf',t:'MTc0MzQzMjAyMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

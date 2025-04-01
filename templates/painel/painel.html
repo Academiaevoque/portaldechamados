@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Métricas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --sidebar-width: 240px;
+      --primary-color: #3273dc;
+      --transition-speed: 0.3s;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #fff;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      position: fixed;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      transition: transform var(--transition-speed);
+      z-index: 30;
+    }
+
+    .sidebar-brand {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 2rem;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar-item {
+      margin: 0.5rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .sidebar-item.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    /* Estilização para itens com submenu (ex.: Gerencial) */
+    .has-submenu .menu-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed);
+    }
+
+    .has-submenu .menu-header:hover {
+      background-color: #f0f0f0;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+      width: calc(100% - var(--sidebar-width));
+    }
+
+    .content-section {
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform var(--transition-speed);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 1rem 0;
+    }
+
+    .metric-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-details {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.5rem;
+    }
+
+    .chart-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+
+    /* Submenu */
+    .submenu {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 0 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .has-submenu.open .submenu {
+      max-height: 500px;
+    }
+
+    .submenu-item {
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: #4a4a4a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .submenu-item:hover {
+      background: #e9ecef;
+      padding-left: 1.75rem;
+    }
+
+    .dropdown-arrow {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .has-submenu.open .dropdown-arrow {
+      transform: rotate(90deg);
+    }
+
+    /* Formulário */
+    .form-section {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.active {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+      }
+
+      .mobile-menu-toggle {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 40;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal de não autorizado */
+    #unauthorizedModal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+
+    #unauthorizedModal .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 30px;
+      border-radius: 8px;
+      width: 50%;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    #unauthorizedModal .modal-title {
+      color: #e74c3c;
+      margin-top: 0;
+    }
+
+    #unauthorizedModal .modal-message {
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    #unauthorizedModal .modal-button {
+      background-color: #2c3e50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #unauthorizedModal .modal-button:hover {
+      background-color: #1a252f;
+    }
+  </style>
+</head>
+<body>
+  <!-- Modal de não autorizado -->
+  <div id="unauthorizedModal" class="modal">
+    <div class="modal-content">
+      <h2 class="modal-title">Acesso Não Autorizado</h2>
+      <p class="modal-message">Você não tem permissões de administrador para acessar esta página.</p>
+      <button class="modal-button" onclick="window.location.href='/'">Voltar à Página Inicial</button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Toggle -->
+  <button class="button is-primary mobile-menu-toggle is-hidden-tablet">
+    <span class="icon">
+      <i class="fas fa-bars"></i>
+    </span>
+  </button>
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="icon">
+        <i class="fas fa-chart-line"></i>
+      </span>
+      Dashboard
+    </div>
+    <ul class="sidebar-menu">
+      <li class="sidebar-item active" data-target="visao-geral">
+        <span class="icon"><i class="fas fa-home"></i></span>
+        Visão Geral
+      </li>
+
+      <li class="has-submenu">
+        <div class="menu-header">
+          <span class="icon"><i class="fas fa-users-cog"></i></span>
+          <span>Gerencial</span>
+          <i class="dropdown-arrow fas fa-angle-right"></i>
+        </div>
+        <ul class="submenu">
+          <li class="submenu-item" data-target="criar-usuario">
+            <span class="icon"><i class="fas fa-user-plus"></i></span>
+            Criar usuário
+          </li>
+          <li class="submenu-item" data-target="permissoes">
+            <span class="icon"><i class="fas fa-shield-alt"></i></span>
+            Permissões
+          </li>
+          <li class="submenu-item" data-target="bloqueios">
+            <span class="icon"><i class="fas fa-lock"></i></span>
+            Bloqueios
+          </li>
+        </ul>
+      </li>
+      
+      <li>
+        <a href="admin-painel_zAPBZhw-E77iAFwJO.html">
+          <div class="menu-header">
+            <span class="icon"><i class="fas fa-cogs"></i></span>
+            <span>Gerenciar chamados</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <!-- Seção Visão Geral: Exibe os gráficos, cards e demais informações -->
+    <div id="visao-geral" class="content-section active">
+      <h1 class="title is-2 mb-6">Painel de Métricas</h1>
+
+      <!-- Metrics Cards -->
+      <div class="columns is-multiline">
+        <!-- Chamados Card -->
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-content">
+              <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <span class="icon is-large has-text-info">
+                  <i class="fas fa-ticket-alt fa-2x"></i>
+                </span>
+              </div>
+              <div class="metric-value">{{ metricas_chamados.total_abertos }}</div>
+              <div class="metric-label">Chamados Abertos</div>
+              <div class="metric-details">
+                Concluídos: {{ metricas_chamados.total_concluidos }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solicitações Card -->
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-content">
+              <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <span class="icon is-large has-text-success">
+                  <i class="fas fa-tasks fa-2x"></i>
+                </span>
+              </div>
+              <div class="metric-value">{{ metricas_solicitacoes.total_abertos }}</div>
+              <div class="metric-label">Solicitações Abertas</div>
+              <div class="metric-details">
+                Concluídas: {{ metricas_solicitacoes.total_concluidos }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tempo Médio Card -->
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-content">
+              <div class="is-flex is-justify-content-space-between is-align-items-center">
+                <span class="icon is-large has-text-warning">
+                  <i class="fas fa-clock fa-2x"></i>
+                </span>
+              </div>
+              <div class="metric-value">{{ "%.2f"|format(metricas_chamados.get('tempo_medio', 0)) }}</div>
+              <div class="metric-label">Tempo Médio (horas)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLA Detalhado -->
+        <div class="column is-6-tablet is-3-desktop">
+          <div class="card">
+            <div class="card-content">
+              <div class="metric-value">{{ metricas_chamados.get('sla_atendido', 0) }}%</div>
+              <div class="metric-label">SLA Chamados</div>
+              <div class="metric-details">
+                Atendidos: {{ metricas_chamados.total_concluidos - metricas_chamados.sla_violados }}<br>
+                Violados: {{ metricas_chamados.sla_violados }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-container">
+        <h3 class="title is-4 mb-4">Comparativo Mensal</h3>
+        <canvas id="graficoComparativo"></canvas>
+      </div>
+
+      <!-- Solicitações Recentes -->
+      <div class="chart-container mt-6">
+        <h3 class="title is-4 mb-4">Solicitações Recentes</h3>
+        <div class="columns is-mobile is-multiline">
+          {% for solicitacao in solicitacoes %}
+          <div class="column is-12">
+            <div class="card mb-5">
+              <div class="card-content">
+                <div class="is-flex is-justify-content-space-between is-align-items-center mb-4">
+                  <div>
+                    <span class="icon-text has-text-info">
+                      <span class="icon">
+                        <i class="fas fa-file-alt"></i>
+                      </span>
+                      <span class="has-text-weight-bold">{{ solicitacao['Código solicitação'] }}</span>
+                    </span>
+                  </div>
+                  <span class="tag {% if ((now - solicitacao['data_abertura']).total_seconds() / 3600) > 3 %}is-danger{% else %}is-success{% endif %}">
+                    {{ ((now - solicitacao['data_abertura']).total_seconds() / 3600)|round(1) }}h
+                  </span>
+                </div>
+
+                <div class="content">
+                  <div class="is-flex is-justify-content-space-between">
+                    <div>
+                      <p class="has-text-weight-semibold">
+                        <i class="fas fa-box has-text-primary"></i> 
+                        {{ solicitacao['Produto'] }}
+                      </p>
+                      <p class="has-text-grey">
+                        <i class="fas fa-building has-text-info"></i>
+                        {{ solicitacao['Unidade'] }}
+                      </p>
+                    </div>
+                    <div class="has-text-right">
+                      <span class="tag {% if solicitacao['Status'] == 'Aprovado' %}is-success{% else %}is-warning{% endif %}">
+                        {{ solicitacao['Status'] }}
+                      </span>
+                      <p class="has-text-grey is-size-7 mt-2">
+                        <i class="fas fa-clock"></i>
+                        {{ solicitacao['data_abertura'].strftime('%d/%m/%Y %H:%M') }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <progress 
+                      class="progress {% if ((now - solicitacao['data_abertura']).total_seconds() / 3600) > 3 %}is-danger{% else %}is-primary{% endif %}" 
+                      value="{{ ((now - solicitacao['data_abertura']).total_seconds() / 3600) }}" 
+                      max="3"
+                    ></progress>
+                    <p class="has-text-grey is-size-7">
+                      Tempo decorrido: {{ ((now - solicitacao['data_abertura']).total_seconds() / 3600)|round(1) }}h / Limite SLA: 3h
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção Criar Usuário: Exibe apenas o formulário centralizado -->
+    <div id="criar-usuario" class="content-section">
+      <div class="form-section">
+        <h2 class="title is-4 mb-5">Criar novo usuário</h2>
+        <form action="/criar-usuario" method="post">
+          <div class="columns is-multiline">
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">Nome</label>
+                <div class="control">
+                  <input class="input" type="text" name="nome" placeholder="Digite o nome" required>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">Sobrenome</label>
+                <div class="control">
+                  <input class="input" type="text" name="sobrenome" placeholder="Digite o sobrenome" required>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">Usuário</label>
+                <div class="control">
+                  <input class="input" type="text" name="usuario" placeholder="Nome de usuário" required>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">E-mail</label>
+                <div class="control">
+                  <input class="input" type="email" name="email" placeholder="Digite o e-mail" required>
+                </div>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">Senha</label>
+                <div class="control has-icons-right">
+                  <input class="input" 
+                         type="text" 
+                         name="senha" 
+                         placeholder="Senha gerada automaticamente" 
+                         readonly 
+                         required
+                         style="font-family: monospace;">
+                  <span class="icon is-small is-right">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                </div>
+                <p class="help">Clique no ícone <i class="fas fa-sync-alt"></i> ao lado para gerar nova senha</p>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="checkbox">
+                  <input type="checkbox" name="alterar_senha_primeiro_acesso">
+                  Permitir que este usuário altere a senha no primeiro acesso.
+                </label>
+              </div>
+            </div>
+            <div class="column is-half">
+              <div class="field">
+                <label class="label">Nível de Acesso</label>
+                <div class="control">
+                  <div class="select is-fullwidth">
+                    <select name="nivel_acesso" required>
+                      <option value="" disabled selected>Selecione o nível</option>
+                      <option value="gerente">Gerente</option>
+                      <option value="gerente_regional">Gerente Regional</option>
+                      <option value="admin">Administrador</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-12">
+              <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                  <button class="button is-primary" type="submit">Salvar</button>
+                </div>
+                <div class="control">
+                  <button class="button is-light voltar" type="button">Voltar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Adicione outras seções conforme necessário -->
+  </main>
+
+  <!-- Modal de Sucesso Atualizado -->
+  <div id="success-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        <article class="media">
+          <div class="media-left">
+            <span class="icon is-large has-text-success">
+              <i class="fas fa-check-circle fa-3x"></i>
+            </span>
+          </div>
+          <div class="media-content">
+            <div class="content">
+              <h2 class="title is-4">Sucesso!</h2>
+              <div class="block">
+                <p class="has-text-weight-semibold">Usuário: 
+                  <span id="modal-usuario" class="has-text-info"></span>
+                </p>
+                <p class="has-text-weight-semibold mt-3">Senha: 
+                  <code id="modal-senha" class="has-background-light p-2"></code>
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+        <div class="buttons is-right">
+          <button class="button is-success" onclick="closeModal()">Fechar</button>
+          <button class="button is-info" onclick="copiarSenha()">
+            <span class="icon">
+              <i class="fas fa-copy"></i>
+            </span>
+            <span>Copiar Senha</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+  </div>
+  
+  <script>
+    // Controle de Navegação
+    function showSection(sectionId) {
+      document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(sectionId)?.classList.add('active');
+    }
+
+    // Menu Principal
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+        showSection(this.dataset.target);
+        
+        if (window.innerWidth <= 768) {
+          document.querySelector('.sidebar').classList.remove('active');
+        }
+      });
+    });
+
+    // Submenu Gerencial
+    document.querySelectorAll('.submenu-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+        showSection(this.dataset.target);
+        this.closest('.has-submenu').classList.add('open');
+      });
+    });
+
+    // Botão Voltar
+    document.querySelectorAll('.voltar').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showSection('visao-geral');
+        document.querySelector('[data-target="visao-geral"]').classList.add('active');
+      });
+    });
+
+    // Controle do Submenu (toggle)
+    document.querySelectorAll('.has-submenu .menu-header').forEach(header => {
+      header.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.parentElement.classList.toggle('open');
+      });
+    });
+
+    // Mobile Menu
+    document.querySelector('.mobile-menu-toggle').addEventListener('click', () => {
+      document.querySelector('.sidebar').classList.toggle('active');
+    });
+
+    // Gráfico
+    const ctx = document.getElementById('graficoComparativo').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ dados_grafico.labels | tojson }},
+        datasets: [{
+          label: 'Chamados',
+          data: {{ dados_grafico.chamados | tojson }},
+          backgroundColor: 'rgba(54, 162, 235, 0.5)'
+        },{
+          label: 'Solicitações',
+          data: {{ dados_grafico.solicitacoes | tojson }},
+          backgroundColor: 'rgba(75, 192, 192, 0.5)'
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+    
+    // Funções do Modal
+    function showModal() {
+      // Buscar valores atuais dos campos
+      const usuario = document.querySelector('input[name="usuario"]').value;
+      const senha = document.querySelector('input[name="senha"]').value;
+      
+      // Atualizar conteúdo do modal
+      document.getElementById('modal-usuario').textContent = usuario;
+      document.getElementById('modal-senha').textContent = senha;
+      
+      // Exibir modal
+      document.getElementById('success-modal').classList.add('is-active');
+    }
+
+    function closeModal() {
+      document.getElementById('success-modal').classList.remove('is-active');
+    }
+
+    function copiarSenha() {
+      const senha = document.getElementById('modal-senha').textContent;
+      navigator.clipboard.writeText(senha);
+    }
+
+    // Controle do Formulário Atualizado
+    document.querySelector('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      
+      try {
+        const response = await fetch('/criar-usuario', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          showModal(); // Chamar DEPOIS da geração
+        } else {
+          alert('Erro: ' + (result.message || 'Erro desconhecido'));
+        }
+      } catch (error) {
+        alert('Erro na comunicação com o servidor');
+      }
+    });
+
+    // Gerador de usuário automático
+    const nomeInput = document.querySelector('input[name="nome"]');
+    const sobrenomeInput = document.querySelector('input[name="sobrenome"]');
+    const usuarioInput = document.querySelector('input[name="usuario"]');
+    const senhaInput = document.querySelector('input[name="senha"]');
+
+    function formatarUsuario(nome, sobrenome) {
+        return '@' + (nome + sobrenome)
+            .toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove acentos
+            .replace(/[^a-zA-Z0-9]/g, '') // Remove caracteres especiais
+            .substring(0, 20); // Limita o tamanho
+    }
+
+    function gerarSenhaAleatoria() {
+        const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const tamanho = Math.random() < 0.5 ? 5 : 6; // 50% chance para 5 ou 6 dígitos
+        let senha = '';
+        
+        for (let i = 0; i < tamanho; i++) {
+            senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        }
+        return senha;
+    }
+
+    // Atualizar usuário automaticamente
+    function atualizarUsuario() {
+        const nome = nomeInput.value.trim();
+        const sobrenome = sobrenomeInput.value.trim();
+        
+        if (nome && sobrenome) {
+            usuarioInput.value = formatarUsuario(nome, sobrenome);
+        }
+    }
+
+    // Event listeners
+    nomeInput.addEventListener('input', atualizarUsuario);
+    sobrenomeInput.addEventListener('input', atualizarUsuario);
+
+    // Gerar senha inicial e adicionar botão de regeneração
+    function configurarSenha() {
+        // Gerar senha inicial
+        senhaInput.value = gerarSenhaAleatoria();
+        
+        // Adicionar botão de regeneração
+        const senhaContainer = senhaInput.closest('.field');
+        const regenerarBtn = document.createElement('button');
+        regenerarBtn.type = 'button';
+        regenerarBtn.className = 'button is-small is-info ml-2';
+        regenerarBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        regenerarBtn.title = 'Gerar nova senha';
+        
+        regenerarBtn.addEventListener('click', () => {
+            senhaInput.value = gerarSenhaAleatoria();
+        });
+        
+        senhaContainer.querySelector('.control').appendChild(regenerarBtn);
+    }
+
+    // Inicializar quando a seção de criar usuário estiver ativa
+    document.querySelector('[data-target="criar-usuario"]').addEventListener('click', () => {
+        setTimeout(configurarSenha, 100);
+    });
+
+    // JavaScript
+    async function verificarUsuarioExistente(usuario) {
+        const resposta = await fetch(`/verificar-usuario?usuario=${usuario}`);
+        return await resposta.json();
+    }
+
+    usuarioInput.addEventListener('blur', async () => {
+        const resposta = await verificarUsuarioExistente(usuarioInput.value);
+        if (resposta.existe) {
+            usuarioInput.classList.add('is-danger');
+            // Exibir mensagem de erro
+        }
+    });
+
+    // Gerador de Senha Atualizado
+    function gerarSenhaAleatoria() {
+      const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      const tamanho = Math.floor(Math.random() * 2) + 5; // 5 ou 6 caracteres
+      return Array.from({length: tamanho}, () => 
+        caracteres.charAt(Math.floor(Math.random() * caracteres.length))
+      ).join('');
+    }
+    
+    // Função para fechar modal e recarregar
+    function closeModal() {
+      document.getElementById('success-modal').classList.remove('is-active');
+      location.reload(true); // Força recarregamento limpo da página
+    }
+
+    document.querySelector('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      
+      // Ajuste do valor do nível de acesso antes de enviar
+      const nivelAcesso = formData.get('nivel_acesso');
+      if (nivelAcesso === 'gerente_regional') {
+        formData.set('nivel_acesso', 'Gerente Regional');
+      }
+      
+      try {
+        const response = await fetch('/criar-usuario', {
+          method: 'POST',
+          body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.status === 'success') {
+          showModal();
+        } else {
+          alert('Erro: ' + (result.message || 'Erro desconhecido'));
+        }
+      } catch (error) {
+        alert('Erro na comunicação com o servidor');
+      }
+    });
+
+    // Verificação de autorização ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      fetch('/painel-metricas')
+        .then(response => {
+          if (!response.ok && response.status === 403) {
+            document.getElementById('unauthorizedModal').style.display = 'block';
+          }
+        })
+        .catch(error => console.error('Erro:', error));
+    });
+  </script>
+</body>
+</html>
